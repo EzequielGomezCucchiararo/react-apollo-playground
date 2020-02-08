@@ -1,0 +1,17 @@
+.footer {
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    color: #fff;
+    background-color: black;
+    padding: 1rem;
+
+    &__title {
+        font-size: 1.4rem;
+        letter-spacing: .5px;
+    }
+
+    &__reg-logo {
+        margin-right: .5rem;
+    }
+}
