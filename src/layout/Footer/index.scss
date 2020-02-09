@@ -1,13 +1,13 @@
 .footer {
     display: flex;
     align-items: center;
-    min-height: 30px;
+    min-height: 25px;
     color: #fff;
     background-color: black;
     padding: 1rem;
 
     &__title {
-        font-size: 1.4rem;
+        font-size: 1rem;
         letter-spacing: .5px;
     }
 

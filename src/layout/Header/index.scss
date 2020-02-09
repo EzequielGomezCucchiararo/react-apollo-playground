@@ -1,14 +1,15 @@
-.header {
-    min-height: 50px;
-    background-color: gold;
+.page-header {
     display: flex;
-    justify-content: left;
-    padding: 1rem;
     align-items: center;
-    box-shadow: 0px 1px 4px 0px #aeaeae;
+    padding: 0 1rem;
+    box-shadow: 0px 2px 3px 0px #a2a2a2;
 
-    &__title {
-        font-size: 2rem;
-        font-weight: 600;
+    &__user {
+        display: flex;
+        width: 300px;
+    }
+
+    &__actions {
+        flex: 1;
     }
 }

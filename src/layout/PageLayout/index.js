@@ -1,11 +1,11 @@
 import React from 'react';
 
-import './index.scss';
-
 import Header from '../Header';
 import Footer from '../Footer';
 
-function AppLayout({ children: pageContent }) {
+import './index.scss';
+
+function PageLayout({ children: pageContent }) {
   return (
     <div className="page">
       <Header />
@@ -17,4 +17,4 @@ function AppLayout({ children: pageContent }) {
   );
 }
 
-export default AppLayout;
+export default PageLayout;
