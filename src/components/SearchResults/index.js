@@ -1,36 +1,13 @@
 import React, { useState } from 'react';
-import gql from 'graphql-tag';
 import { useLazyQuery } from '@apollo/react-hooks';
-
 import { Grid, Form, Card, Image, Icon } from 'semantic-ui-react';
+
+import { GET_CHARACTERS } from './queries';
 
 import './index.scss';
 
 function SearchResults() {
   const [characterName, setCharacterName] = useState('')
-
-  const GET_CHARACTERS = gql`
-    query GetCharactersByName($name: String!){
-      characters(filter: { name: $name }) {
-        results {
-          id,
-          name,
-          image,
-          status,
-          gender,
-          species,
-          type,
-          episode {
-            id
-          },
-          location {
-            name
-          }
-        }
-      }
-    }
-  `;
-
   const [getCharacters, { loading, data }] = useLazyQuery(GET_CHARACTERS);
 
   return (
