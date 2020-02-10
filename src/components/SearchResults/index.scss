@@ -1,5 +1,17 @@
-.ui.grid > .row > .column.card-result {
-    margin-bottom: 2rem;
+.ui.grid > .row > .column {
+    &.card-result {
+        margin-bottom: 2rem;
+    }
+}
+
+.ui.card {
+    & > .content > .header:not(.ui) {
+        font-size: 1.3rem;
+    }
+
+    & .meta :last-child {
+        font-size: 1.1rem;
+    }
 }
 
 .extra.content {
@@ -7,4 +19,8 @@
         margin-left: 5px;
         font-size: 1rem;
     }
+}
+
+.ui.form.search-form {
+    margin-bottom: 2rem;
 }
