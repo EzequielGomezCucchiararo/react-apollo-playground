@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 import { Grid, Form, Loader, Select, Button, Input, Card, Image, Icon } from 'semantic-ui-react';
 
@@ -8,8 +8,6 @@ import './index.scss';
 
 function SearchResults() {
   const [state, setState] = useState({
-    searching: false,
-    results: [],
     characterName: '',
     characterStatus: ''
   })
@@ -25,21 +23,8 @@ function SearchResults() {
       ...state,
       [e.target.name]: e.target.value,
     })
-    console.log("TCL: onChange -> e.target.name", e.target.name)
+    // TODO: select tiene target null console.log("TCL: onChange -> e.target.value", e)
   }
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-    setState({ ...state, searching: true });
-    refetch({ name: state.characterName })
-      .then(({ data }) => {
-        setState({
-          ...state,
-          results: data.characters.results,
-          searching: false,
-        });
-      });
-  };
 
   const GET_CHARACTERS = gql`
     query Characters($name: String!){
@@ -48,7 +33,6 @@ function SearchResults() {
           id,
           name,
           image,
-          species,
           status,
           gender,
           episode {
@@ -63,21 +47,21 @@ function SearchResults() {
     }
   `;
 
-  const { refetch } = useQuery(GET_CHARACTERS, { skip: true });
+  const [getCharacters, { loading, data }] = useLazyQuery(GET_CHARACTERS);
 
   return (
     <>
       <Form noValidate
         className="search-form"
-        loading={state.searching}
-        onSubmit={handleSearch}
+        loading={loading}
+        onSubmit={() => getCharacters({ variables: { name: state.characterName } })}
       >
         <Form.Group widths='equal'>
           <Form.Input
             fluid
             label='Character Name'
             name="characterName"
-            value={ state.characterName }
+            value={state.characterName}
             placeholder='Type a character...'
             onChange={onChange}
           />
@@ -86,7 +70,6 @@ function SearchResults() {
             label='Status'
             name="characterStatus"
             options={statusOptions}
-            value={ state.characterStatus }
             placeholder='Status'
             onChange={onChange}
           />
@@ -95,8 +78,8 @@ function SearchResults() {
       </Form>
       <Grid columns={4}>
         {
-          !state.searching && <Grid.Row>
-            {state.results.map((item) => {
+          !loading && data && <Grid.Row>
+            {data.characters.results && data.characters.results.map((item) => {
               return (
                 <Grid.Column key={item.id} className="card-result">
                   <Card>
@@ -104,7 +87,7 @@ function SearchResults() {
                     <Card.Content>
                       <Card.Header>{item.name}</Card.Header>
                       <Card.Meta>
-                        <span>{item.species} {item.type ? `(${item.type})` : ''}</span>
+                        <span>{item.gender} - {item.species} {item.type ? `(${item.type})` : ''}</span>
                       </Card.Meta>
                     </Card.Content>
                     <Card.Content extra>
