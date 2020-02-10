@@ -2,32 +2,15 @@ import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useLazyQuery } from '@apollo/react-hooks';
 
-import { Grid, Form, Loader, Select, Button, Input, Card, Image, Icon } from 'semantic-ui-react';
+import { Grid, Form, Card, Image, Icon } from 'semantic-ui-react';
 
 import './index.scss';
 
 function SearchResults() {
-  const [state, setState] = useState({
-    characterName: '',
-    characterStatus: ''
-  })
-
-  const statusOptions = [
-    { key: 'alive', value: 'alive', text: 'Alive' },
-    { key: 'dead', value: 'dead', text: 'Dead' },
-    { key: 'unknow', vunknowue: 'al', text: 'Unknow' },
-  ]
-
-  const onChange = (e) => {
-    setState({
-      ...state,
-      [e.target.name]: e.target.value,
-    })
-    // TODO: select tiene target null console.log("TCL: onChange -> e.target.value", e)
-  }
+  const [characterName, setCharacterName] = useState('')
 
   const GET_CHARACTERS = gql`
-    query Characters($name: String!){
+    query GetCharactersByName($name: String!){
       characters(filter: { name: $name }) {
         results {
           id,
@@ -35,10 +18,11 @@ function SearchResults() {
           image,
           status,
           gender,
+          species,
+          type,
           episode {
             id
           },
-          species,
           location {
             name
           }
@@ -51,31 +35,27 @@ function SearchResults() {
 
   return (
     <>
-      <Form noValidate
-        className="search-form"
-        loading={loading}
-        onSubmit={() => getCharacters({ variables: { name: state.characterName } })}
-      >
-        <Form.Group widths='equal'>
-          <Form.Input
-            fluid
-            label='Character Name'
-            name="characterName"
-            value={state.characterName}
-            placeholder='Type a character...'
-            onChange={onChange}
-          />
-          <Form.Select
-            fluid
-            label='Status'
-            name="characterStatus"
-            options={statusOptions}
-            placeholder='Status'
-            onChange={onChange}
-          />
-        </Form.Group>
-        <Form.Button primary>Search</Form.Button>
-      </Form>
+      <Grid columns={4}>
+        <Grid.Column>
+          <Form noValidate
+            className="search-form"
+            onSubmit={() => getCharacters({ variables: { name: characterName } })}
+          >
+            <Form.Group widths='equal'>
+              <Form.Input
+                fluid
+                loading={loading}
+                label='Character Name'
+                name="characterName"
+                value={characterName}
+                placeholder='Type a character...'
+                onChange={(e) => setCharacterName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Button primary>Search</Form.Button>
+          </Form>
+        </Grid.Column>
+      </Grid>
       <Grid columns={4}>
         {
           !loading && data && <Grid.Row>
